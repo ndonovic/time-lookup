@@ -13,7 +13,7 @@
         background-color: #f2f2f2;
       }
       h1 {
-        font-weight: 300;
+        font-weight: bold;
         font-size: 2.5rem;
         margin-top: 40px;
       }
@@ -31,9 +31,10 @@
       }
       button {
         font-size: 1rem;
+        font-weight: bold;
         padding: 10px 20px;
         border-radius: 5px;
-        background-color: #8BE320;
+        background-color: #348D94;
         color: #fff;
         border: none;
         cursor: pointer;
@@ -41,6 +42,13 @@
       #result {
         font-size: 1.5rem;
         margin-top: 20px;
+      }
+      #spinner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     </style>
   </head>
@@ -51,10 +59,12 @@
       <button type="button" onclick="getTimezone()">Get Time Zone</button>
     </form>
     <div id="result"></div>
+    <img id="spinner" src="" alt="Loading...">
     <script>
       function getTimezone() {
         var locationInput = document.getElementById('location').value;
         var apiUrl = 'https://api.ipgeolocation.io/timezone?apiKey=4f9f425b2e384f3dae1fdb40c843dce2&location=' + encodeURIComponent(locationInput);
+        showSpinner();
         fetch(apiUrl)
           .then(response => response.json())
           .then(data => {
@@ -62,13 +72,25 @@
             var time = data.time_12;
             var resultElement = document.getElementById('result');
             resultElement.innerHTML = `Time zone: ${timezone} (${time})`;
+            hideSpinner();
           })
           .catch(error => {
             var resultElement = document.getElementById('result');
             resultElement.textContent = 'An error occurred: ' + error.message;
+            hideSpinner();
           });
       }
-      
+
+      function showSpinner() {
+        document.getElementById('spinner').style.display = 'block';
+        document.getElementById('result').style.display = 'none';
+      }
+
+      function hideSpinner() {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+      }
+
       var locationInput = document.getElementById('location');
       locationInput.addEventListener('keydown', function(event) {
         if (event.keyCode === 13) {
