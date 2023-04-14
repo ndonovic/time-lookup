@@ -8,8 +8,9 @@ async function fetchTimeZone() {
     const data = await response.json();
     const timeZone = data.timezone;
     const location = `${data.geo.city}, ${data.geo.state}, ${data.geo.country}`;
+    const currentTime = data.date_time_txt;
 
-    document.getElementById('result').innerHTML = `Location: ${location} <br> Time Zone: ${timeZone}`;
+    document.getElementById('result').innerHTML = `Location: ${location} <b> Current Time: ${currentTime} <br> Time Zone: ${timeZone}`;
   } catch (error) {
     document.getElementById('result').innerHTML = 'Error fetching data. Please check the input and try again.';
   }
