@@ -66,26 +66,31 @@
     <div id="result"></div>
     <img id="spinner" src="spinner.gif" alt="Loading...">
     <script>
-      function getTimezone() {
-        var locationInput = document.getElementById('location').value;
-        var apiUrl = 'https://api.ipgeolocation.io/timezone?apiKey=7bff15dfa4a44196ac0e870a78007732&location=' + encodeURIComponent(locationInput);
-        showSpinner();
-        fetch(apiUrl)
-          .then(response => response.json())
-          .then(data => {
-            var timezone = data.timezone;
-            var time = data.time_12;
-            var resultElement = document.getElementById('result');
-            resultElement.innerHTML = `Time zone: ${timezone} (${time})`;
-            hideSpinner();
-          })
-          .catch(error => {
-            var resultElement = document.getElementById('result');
-            resultElement.textContent = 'An error occurred: ' + error.message;
-            hideSpinner();
-          });
+     function getTimezone() {
+  var locationInput = document.getElementById('location').value;
+  var apiUrl = 'https://api.ipgeolocation.io/timezone?apiKey=7bff15dfa4a44196ac0e870a78007732&location=' + encodeURIComponent(locationInput);
+  showSpinner();
+  fetch(apiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-
+      return response.json();
+    })
+    .then(data => {
+      var timezone = data.timezone;
+      var time = data.time_12;
+      var resultElement = document.getElementById('result');
+      resultElement.innerHTML = `Time zone: ${timezone} (${time})`;
+      hideSpinner();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      var resultElement = document.getElementById('result');
+      resultElement.textContent = 'An error occurred: ' + error.message;
+      hideSpinner();
+    });
+}
       function showSpinner() {
         document.getElementById('spinner').style.display = 'block';
         document.getElementById('result').style.display = 'none';
