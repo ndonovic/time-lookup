@@ -1,7 +1,7 @@
 async function fetchTimeZone() {
   const locationInput = document.getElementById('location').value;
   const apiKey = '641db438b18b474b90545f84a84f1085';
-  const url = `https://api.ipgeolocation.io/timezone?apiKey=${apiKey}&location=${locationInput}`;
+  const url = `https://cors-anywhere.herokuapp.com/https://api.ipgeolocation.io/timezone?apiKey=${apiKey}&location=${locationInput}`;
 
   try {
     const response = await fetch(url);
