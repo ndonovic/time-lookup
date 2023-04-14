@@ -48,13 +48,6 @@
         font-size: 1.5rem;
         margin-top: 20px;
       }
-      #spinner {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
     </style>
   </head>
   <body>
@@ -64,43 +57,24 @@
       <button type="button" onclick="getTimezone()">Get Time Zone</button>
     </form>
     <div id="result"></div>
-    <img id="spinner" src="spinner.gif" alt="Loading...">
     <script>
-     function getTimezone() {
-  var locationInput = document.getElementById('location').value;
-  var apiUrl = 'https://api.ipgeolocation.io/timezone?apiKey=7bff15dfa4a44196ac0e870a78007732&location=' + encodeURIComponent(locationInput);
-  showSpinner();
-  fetch(apiUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      function getTimezone() {
+        var locationInput = document.getElementById('location').value;
+        var apiUrl = 'https://api.ipgeolocation.io/timezone?apiKey=7bff15dfa4a44196ac0e870a78007732&location=' + encodeURIComponent(locationInput);
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            var timezone = data.timezone;
+            var time = data.time_12;
+            var resultElement = document.getElementById('result');
+            resultElement.innerHTML = `Time zone: ${timezone} (${time})`;
+          })
+          .catch(error => {
+            var resultElement = document.getElementById('result');
+            resultElement.textContent = 'An error occurred: ' + error.message;
+          });
       }
-      return response.json();
-    })
-    .then(data => {
-      var timezone = data.timezone;
-      var time = data.time_12;
-      var resultElement = document.getElementById('result');
-      resultElement.innerHTML = `Time zone: ${timezone} (${time})`;
-      hideSpinner();
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      var resultElement = document.getElementById('result');
-      resultElement.textContent = 'An error occurred: ' + error.message;
-      hideSpinner();
-    });
-}
-      function showSpinner() {
-        document.getElementById('spinner').style.display = 'block';
-        document.getElementById('result').style.display = 'none';
-      }
-
-      function hideSpinner() {
-        document.getElementById('spinner').style.display = 'none';
-        document.getElementById('result').style.display = 'block';
-      }
-
+      
       var locationInput = document.getElementById('location');
       locationInput.addEventListener('keydown', function(event) {
         if (event.keyCode === 13) {
